@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- `my_addons` adalah nama folder addons-->
+        <report 
+            id="report_my_addons_menu"
+            string="Report Detail"
+            model="mesin.data"
+            report_type="qweb-pdf"
+            file="mesin.data" 
+            name="my_addons.mesin_report" 
+        />
+
+        <template id="report_document_mesin">
+            <t t-call="report.external_layout">
+                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+                <div class="page">
+                    <div class="oe_structure"/>
+                    
+                    <h2>
+                        DOCUMENT MESIN
+                        <br/>Nomor: <span t-field="o.name"/>
+                    </h2>
+
+                    <p>
+                        Contoh informasi
+                        <span t-field="o.amount" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                    </p>
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th class="text-right">Jumlah</th>
+                                <th class="text-right">Harga</th>
+                                <th class="text-right">Catatan</th>
+                            </tr>
+                       </thead>
+
+                       <tbody>
+                            <tr t-foreach="o.mesin_line_ids" t-as="l">
+                                <td>
+                                   <span t-field="l.name"/>
+                                </td>
+         
+                                <td class="text-right">
+                                    <span t-field="l.qty" />
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="l.price" />
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="l.note" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-xs-4 pull-right">
+                            <table class="table table-condensed">
+                                <tr class="border-black">
+                                    <td><strong>Total </strong></td>
+                                    <td class="text-right">
+                                        <span t-field="o.amount" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </template>
+
+        <!-- `my_addons` adalah nama folder addons-->
+        <template id="mesin_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="my_addons.report_document_mesin" t-lang="o.partner_id.lang"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>
